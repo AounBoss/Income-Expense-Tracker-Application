@@ -1,8 +1,14 @@
 import express from 'express';
+import cors from 'cors';
+
+
+
 import userRouter from './routes/route.js';
 import categoryRouter from './routes/categories.route.js';
 import transactionRouter from './routes/transaction.route.js';
 const app = express();
+
+app.use(cors());
 
 app.use(express.json());
 app.use((req,res,next) => {
