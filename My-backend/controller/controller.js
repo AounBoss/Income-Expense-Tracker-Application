@@ -9,7 +9,7 @@ const registerUser = async (req, res) => {
       email: email.toLowerCase(),
     });
     if (existing) {
-      return res.status(400).json({ message: "user already" });
+      return res.status(400).json({ message: "The following email is already registered" });
     }
     const user = await User.create({
       username,

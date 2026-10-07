@@ -7,7 +7,7 @@ export const createTransaction = async (req, res) => {
     const transaction = await Transaction.create({
       type,
       amount,
-      category,
+      
       date,
       description,
       userId,
@@ -51,7 +51,7 @@ export const getTransactionById = async (req, res) => {
       .populate("category")
       .populate("userId");
 
-    if (!transaction) {
+    if (!transaction) {s
       return res.status(404).json({
         message: "Transaction not found",
       });
