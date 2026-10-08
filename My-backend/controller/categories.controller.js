@@ -26,8 +26,15 @@ export const createCategory = async (req, res) => {
 
 
 export const getCategories = async (req, res) => {
-  try {
-    const categories = await Category.find();
+  try {const userId = req.headers["x-user-id"];
+    if (!userId) {
+      return res.status(400).json({
+        message: "User ID is required",
+      });
+    }
+    const categories = await Category.find({
+      userId:userId,
+    });
 
     res.status(200).json({
       message: "Categories fetched successfully",
