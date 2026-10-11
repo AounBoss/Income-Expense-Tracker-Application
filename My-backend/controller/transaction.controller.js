@@ -1,45 +1,5 @@
 import Transaction from "../model/transaction.model.js";
-export const getDashboardStats = async (req, res) => {
-    try {
-        // Aggregate totals
-        const totals = await Transaction.aggregate([
-            {
-                $group: {
-                    _id: '$type',
-                    totalAmount: { $sum: '$amount' }
-                }
-            }
-        ]);
 
-        // Initialize values
-        let totalIncome = 0;
-        let totalExpense = 0;
-
-        // Assign totals based on type
-        totals.forEach(item => {
-            if (item._id === 'income') totalIncome = item.totalAmount;
-            if (item._id === 'expense') totalExpense = item.totalAmount;
-        });
-
-        // Calculate balance
-        const balance = totalIncome - totalExpense;
-
-        res.status(200).json({
-            success: true,
-            data: {
-                totalIncome,
-                totalExpense,
-                balance
-            }
-        });
-    } catch (error) {
-        console.error('Dashboard API Error:', error);
-        res.status(500).json({
-            success: false,
-            message: 'Server error while fetching dashboard stats'
-        });
-    }
-};
 
 export const createTransaction = async (req, res) => {
   try {
@@ -118,6 +78,7 @@ export const getTransactionById = async (req, res) => {
 
 export const updateTransaction = async (req, res) => {
   try {
+    
     const transaction = await Transaction.findByIdAndUpdate(
       req.params.id,
       req.body,
