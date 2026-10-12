@@ -3,11 +3,11 @@ import Category from "../model/categories.model.js";
 
 export const createCategory = async (req, res) => {
   try {
-    const { name, type, budget, userId } = req.body;
+    const { name,  budget, userId } = req.body;
 
     const category = await Category.create({
       name,
-      type,
+      
       budget,
       userId,
     });

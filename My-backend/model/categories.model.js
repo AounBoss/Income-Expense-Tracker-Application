@@ -8,15 +8,15 @@ const categorySchema = new mongoose.Schema(
       trim: true,
     },
 
-    type: {
-      type: String,
-      required: true,
-      enum: ["Income", "Expense"],
-    },
+    // type: {
+    //   type: String,
+    //   required: true,
+    //   enum: ["Income", "Expense"],
+    // },
 
     budget: {
       type: Number,
-      required: true,
+      required: false,
       min: 0,
     },
 

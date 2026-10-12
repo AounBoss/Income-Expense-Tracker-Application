@@ -1,5 +1,5 @@
+import Category from "../model/categories.model.js";
 import Transaction from "../model/transaction.model.js";
-
 
 export const createTransaction = async (req, res) => {
   try {
@@ -36,9 +36,7 @@ export const getTransactions = async (req, res) => {
     }
     const transactions = await Transaction.find({
       userId: userId,
-      
-      // date: "2026-10-15T00:00:00.000+00:00"
-    });
+    }).populate("category");
 
     res.status(200).json({
       message: "Transactions fetched successfully",
@@ -55,7 +53,8 @@ export const getTransactions = async (req, res) => {
 export const getTransactionById = async (req, res) => {
   try {
     const transaction = await Transaction.findById(req.params.id)
-      .populate("category")
+      .populate("category", "name")
+
       .populate("userId");
 
     if (!transaction) {
@@ -78,7 +77,6 @@ export const getTransactionById = async (req, res) => {
 
 export const updateTransaction = async (req, res) => {
   try {
-    
     const transaction = await Transaction.findByIdAndUpdate(
       req.params.id,
       req.body,
