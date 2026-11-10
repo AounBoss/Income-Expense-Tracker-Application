@@ -1,17 +1,18 @@
 import Transaction from "../model/transaction.model.js";
 export const getDashboardStats = async (req, res) => {
-    try {const userId = req.headers["x-user-id"];
-    if (!userId) {
-      return res.status(400).json({
-        message: "User ID is required",
-      });
-    }
-    const transactions = await Transaction.find({
-      userId: userId,
+     try{
+    //  {const userId = req.headers["x-user-id"];
+    // if (!userId) {
+    //   return res.status(400).json({
+    //     message: "User ID is required",
+    //   });
+    // }
+    // const transactions = await Transaction.find({
+    //   userId: userId,
       
-      // date: "2026-10-15T00:00:00.000+00:00"
-    });
-
+    //   // date: "2026-10-15T00:00:00.000+00:00"
+    // });
+const userId=req.user.id;
         // Aggregate totals
         const totals = await Transaction.aggregate([
              {

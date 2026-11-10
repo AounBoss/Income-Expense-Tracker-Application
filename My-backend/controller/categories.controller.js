@@ -3,13 +3,13 @@ import Category from "../model/categories.model.js";
 
 export const createCategory = async (req, res) => {
   try {
-    const { name,  budget, userId } = req.body;
+    const { name,  budget } = req.body;
 
     const category = await Category.create({
       name,
       
       budget,
-      userId,
+      userId:req.user.id
     });
 
     res.status(201).json({
@@ -26,14 +26,15 @@ export const createCategory = async (req, res) => {
 
 
 export const getCategories = async (req, res) => {
-  try {const userId = req.headers["x-user-id"];
-    if (!userId) {
-      return res.status(400).json({
-        message: "User ID is required",
-      });
-    }
+   try {
+  // {const userId = req.headers["x-user-id"];
+  //   if (!userId) {
+  //     return res.status(400).json({
+  //       message: "User ID is required",
+  //     });
+  //   }
     const categories = await Category.find({
-      userId:userId,
+      userId:req.user.id,
     });
 
     res.status(200).json({
@@ -46,10 +47,49 @@ export const getCategories = async (req, res) => {
       error: error.message,
     });
   }
-}
+};
+export const updateCategory = async (req, res) => {
+  try {const { userId, ...updates } = req.body;
+    const category = await Category.findByIdAndUpdate(
+      // req.params.id,
+      // req.body,
+      {
+        _id: req.params.id,
+        userId: req.user.id,
+      },
+      updates,
+      {
+        new: true,
+        runValidators: true,
+      },
+    );
+
+    if (!category) {
+      return res.status(404).json({
+        message: "Category not found",
+      });
+    }
+
+    res.status(200).json({
+      message: "Category updated successfully",
+      category,
+    });
+  } catch (error) {if (error.name === "CastError") {
+      return res.status(400).json({
+        message: "Invalid category ID",
+      });
+    }
+    res.status(500).json({
+      message: "Failed to update category",
+      error: error.message,
+    });
+  }
+};
+
 export const deleteCategory = async (req, res) => {
   try {
-    const category = await Category.findByIdAndDelete(req.params.id);
+    const category = await Category.findByIdAndDelete({ _id: req.params.id,
+      userId: req.user.id,});
 
     if (!category) {
       return res.status(404).json({
@@ -60,7 +100,11 @@ export const deleteCategory = async (req, res) => {
     res.status(200).json({
       message: "Category deleted successfully",
     });
-  } catch (error) {
+  } catch (error){ if (error.name === "CastError") {
+      return res.status(400).json({
+        message: "Invalid category ID",
+      });
+    }
     res.status(500).json({
       message: "Failed to delete category",
       error: error.message,
